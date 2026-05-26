@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
+    public function index(){
+        $tickets = Ticket::all();
+        return response()->json($tickets);
+    }
+
     public function store(){
         $ticket = Ticket::create([
             'title' => 'Primeiro Ticket',
