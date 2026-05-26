@@ -11,18 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tickets', function (Blueprint $table) {
-            $table->id();
-
-            $table->string('title');
-            $table->text('description');
-
-            $table->string('status')->default('open');
-
-            $table->string('priority')->default('medium');
-            
-            $table->timestamps();
-
+        Schema::table('tickets', function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -32,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tickets');
+        Schema::table('tickets', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };
