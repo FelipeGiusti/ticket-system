@@ -12,12 +12,47 @@ class TicketController extends Controller
         return response()->json($tickets);
     }
 
-    public function store(){
+    public function store(Request $request){
+        $request->validate([
+            'title' => 'required|min:5|max:255',
+            'description' => 'required|min:10',
+            'priority' => 'nullable|in:low,medium,high',
+        ]);
+
+
         $ticket = Ticket::create([
-            'title' => 'Primeiro Ticket',
-            'description' => 'Meu primeiro ticket no Laravel',
-            'status' => 'open',
-            'priority' => 'medium',
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status ?? 'open',
+            'priority' => $request->priority ?? 'medium',
+        ]);
+
+        return response()->json($ticket);
+    }
+
+    public function show($id){
+        $ticket = Ticket::findOrFail($id);
+
+        return response()->json($ticket);
+    }
+
+    public function update(Request $request, $id){
+        $request->headers->set('Accept', 'application/json');
+
+        $ticket = Ticket::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|min:5|max:255',
+            'description' => 'required|min:10',
+            'priority' => 'nullable|in:low,medium,high',
+            'status' => 'nullable|in:open,in_progess,resolved,closed'
+        ]);
+
+        $ticket->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'priority' => $request->priority, 
         ]);
 
         return response()->json($ticket);

@@ -3,6 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
 
+Route::post('/teste', function () {
+    return response()->json([
+        'success' => true
+    ]);
+});
 
+Route::post('/tickets', [TicketController::class, 'store']); //cria ticket
 Route::get('/tickets', [TicketController::class, 'index']); //lista tickets
-Route::post('tickets', [TicketController::class, 'store']); //cria ticket
+Route::get('/tickets/{id}', [TicketController::class, 'show']); //pesquisa ticket por ID
+Route::post('/tickets/{id}', [TicketController::class, 'update']); //atualizar ticket por ID
