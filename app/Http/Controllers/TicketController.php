@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
-
 use Illuminate\Http\Request;
+
+use App\Models\Ticket;
+use App\Http\Requests\StoreTicketRequest;
+use App\Http\Requests\UpdateTicketRequest;
 
 class TicketController extends Controller
 {
@@ -12,14 +14,7 @@ class TicketController extends Controller
         return response()->json($tickets);
     }
 
-    public function store(Request $request){
-        $request->validate([
-            'title' => 'required|min:5|max:255',
-            'description' => 'required|min:10',
-            'priority' => 'nullable|in:low,medium,high',
-        ]);
-
-
+    public function store(StoreTicketRequest $request){
         $ticket = Ticket::create([
             'title' => $request->title,
             'description' => $request->description,
@@ -27,7 +22,7 @@ class TicketController extends Controller
             'priority' => $request->priority ?? 'medium',
         ]);
 
-        return response()->json($ticket);
+        return redirect('tickets');
     }
 
     public function show($id){
@@ -36,17 +31,10 @@ class TicketController extends Controller
         return response()->json($ticket);
     }
 
-    public function update(Request $request, $id){
+    public function update(UpdateTicketRequest $request, $id){
         $request->headers->set('Accept', 'application/json');
 
         $ticket = Ticket::findOrFail($id);
-
-        $request->validate([
-            'title' => 'required|min:5|max:255',
-            'description' => 'required|min:10',
-            'priority' => 'nullable|in:low,medium,high',
-            'status' => 'nullable|in:open,in_progess,resolved,closed'
-        ]);
 
         $ticket->update([
             'title' => $request->title,
